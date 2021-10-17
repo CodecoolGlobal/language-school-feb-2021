@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Annotation
+@Entity
 public class Teacher extends User {
 
     //@Annotation

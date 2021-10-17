@@ -6,7 +6,7 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 
-//@Annotation
+@Entity
 public class Student extends User {
 
     //@Annotation

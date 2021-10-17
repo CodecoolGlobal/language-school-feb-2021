@@ -7,19 +7,24 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Annotation
+@Entity
 public class Klass {
 
-    //@Annotation
+    @Id
+    @GeneratedValue
     private long id;
 
-    //@Annotation
+    @Basic(optional = false)
     private String className;
 
-    //@Annotation
+    // 1:1 @OneToOne
+    // n:1 @ManyToOne
+    // 1:n @OneToMane
+    // n:n @ManyToMany
+    @OneToMany(mappedBy = "klass")
     private Set<Student> studentSet;
 
-    //@Annotation
+    @ManyToOne
     private Teacher teacher;
 
     public Klass(String className) {
