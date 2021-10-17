@@ -54,6 +54,23 @@ public class Input {
         return userInt;
     }
 
+    public long getLongInput(String title) {
+        System.out.println(title);
+        String userInput;
+        long userLong = 1;
+        boolean validInput = false;
+        while (!validInput) {
+            userInput = scan.next();
+            if (!userInput.equals("") && userInput.matches("^[0-9]*$")) {
+                validInput = true;
+                userLong = Long.parseLong(userInput);
+            } else {
+                System.out.println("Invalid input. Enter again: ");
+            }
+        }
+        return userLong;
+    }
+
 
     public int getIntInput(String title, int range) {
         System.out.println(title);

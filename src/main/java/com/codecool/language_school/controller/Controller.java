@@ -7,6 +7,7 @@ import com.codecool.language_school.view.View;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,7 @@ public abstract class Controller {
      * Loop in which program stays while user is logged in.
      * It wraps the specific Controller class method calls
      * with logic committing transaction to database.
-     *
+     * <p>
      * Gets EntityTransaction from EntityManager.
      * Loop starts.
      * Prints commands calling View.
@@ -45,10 +46,16 @@ public abstract class Controller {
      * Starts transaction.
      * Calls commandsMap.get(userChoice).run().
      * Commits transaction.
-     *
      */
     public void run() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        EntityTransaction transaction = entityManager.getTransaction();
+        while(loggedIn) {
+            view.printCommands();
+            int input = this.input.getIntInput("", commandsMap.size());
+            transaction.begin();
+            commandsMap.get(input).run();
+            transaction.commit();
+        }
     }
 
     public void logOut() {
@@ -64,32 +71,40 @@ public abstract class Controller {
      * Generic method retrieving Optional of single object from database by single parameter.
      * Method uses String.format() and Query.setParameter() to create dynamic queries
      *
-     * @param theClass class to receive from query
+     * @param theClass  class to receive from query
      * @param tableName database table name
      * @param parameter database column name to look by
-     * @param value database column value to look by
-     * @param <T> type to receive from query
-     * @param <V> type of parameter passed to query
+     * @param value     database column value to look by
+     * @param <T>       type to receive from query
+     * @param <V>       type of parameter passed to query
      * @return Optional of <T> by Stream findFirst() on result list
      */
-    protected <T, V> Optional<T> getOptional(Class<T> theClass, String tableName, String parameter, V value){
-        throw new UnsupportedOperationException("Not yet implemented");
+    protected <T, V> Optional<T> getOptional(Class<T> theClass, String tableName, String parameter, V value) {
+        String query = String.format("SELECT t FROM %s t WHERE t.%s = ?1", tableName, parameter);
+        return entityManager.createQuery(query, theClass)
+                .setParameter(1, value)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     /**
      * Generic method retrieving list of objects from database by single parameter.
      * Method uses String.format() and Query.setParameter() to create dynamic queries
      *
-     * @param theClass class to receive from query
+     * @param theClass  class to receive from query
      * @param tableName database table name
      * @param parameter database column name to look by
-     * @param value database column value to look by
-     * @param <T> type to receive from query
-     * @param <V> type of parameter passed to query
+     * @param value     database column value to look by
+     * @param <T>       type to receive from query
+     * @param <V>       type of parameter passed to query
      * @return Optional of <T> by Stream findFirst() on result list
      */
-    protected <T, V> List<T> getList(Class<T> theClass, String tableName, String parameter, V value){
-        throw new UnsupportedOperationException("Not yet implemented");
+    protected <T, V> List<T> getList(Class<T> theClass, String tableName, String parameter, V value) {
+        String query = String.format("SELECT t FROM %s t WHERE t.%s = ?1", tableName, parameter);
+        return entityManager.createQuery(query, theClass)
+                .setParameter(1, value)
+                .getResultList();
     }
 
     protected void deleteStudent() {
@@ -122,7 +137,7 @@ public abstract class Controller {
 
     /**
      * Method creating user of given role and persisting the user and their credentials.
-     *
+     * <p>
      * Gets name, surname and age by calling Input methods.
      * Gets credentials by Controller method.
      * Persists credentials - if credentials which user relates to are not in database
@@ -148,7 +163,7 @@ public abstract class Controller {
      *
      * @param dataType table name
      * @param theClass class to receive from query
-     * @param <T> type to receive from query
+     * @param <T>      type to receive from query
      * @return Object of type <T> by Stream findFirst() on result list
      */
     protected <T> T getExisting(String dataType, Class<T> theClass) {

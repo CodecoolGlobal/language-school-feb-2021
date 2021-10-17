@@ -5,19 +5,19 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-//@Annotation
+@Entity
 public class AttendanceEntry {
 
-    //@Annotation
+    @Id
+    @GeneratedValue
     private long id;
 
-    //@Annotation
     private LocalDate date;
 
-    //@Annotation
+    @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
 
-    //@Annotation
+    @ManyToOne
     private Attendance attendance;
 
     public AttendanceEntry(LocalDate date, AttendanceStatus status) {

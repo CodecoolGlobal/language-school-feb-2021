@@ -3,16 +3,21 @@ package com.codecool.language_school.model.user;
 import com.codecool.language_school.model.attendance.Attendance;
 import com.codecool.language_school.model.klass.Klass;
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.Polymorphism;
+import org.hibernate.annotations.PolymorphismType;
 
 import javax.persistence.*;
 
+import static com.codecool.language_school.model.user.Role.Values.STUDENT_STRING;
+
 @Entity
+@DiscriminatorValue(value = STUDENT_STRING)
 public class Student extends User {
 
-    //@Annotation
+    @ManyToOne
     private Klass klass;
 
-    //@Annotation
+    @OneToOne(mappedBy = "student")
     private Attendance attendance;
 
     public Student(Klass klass) {

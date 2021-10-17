@@ -1,12 +1,15 @@
 package com.codecool.language_school.controller;
 
 import com.codecool.language_school.input.Input;
+import com.codecool.language_school.model.klass.Klass;
 import com.codecool.language_school.model.user.Role;
+import com.codecool.language_school.model.user.Student;
 import com.codecool.language_school.model.user.User;
 import com.codecool.language_school.view.AdminView;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public class AdminController extends Controller {
 
@@ -36,9 +39,18 @@ public class AdminController extends Controller {
     }
 
     private void editStudent() {
+        long studentId = input.getLongInput("Insert student id:");
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        getOptional(User.class, "AppUser", "id", studentId)
+                .map(Student.class::cast)
+                .map(student -> {
+                    long klassId = input.getLongInput("Insert new class id:");
 
+                    getOptional(Klass.class, "Klass", "id", klassId)
+                            .ifPresent(student::setKlass);
+                    return student;
+                })
+                .ifPresent(entityManager::merge);
     }
 
     private void editMentor() {
